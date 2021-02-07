@@ -5,13 +5,13 @@ import rhino3dm from 'https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/rhino3dm
 import { RhinoCompute } from 'https://cdn.jsdelivr.net/npm/compute-rhino3d@0.13.0-beta/compute.rhino3d.module.js'
 
 // reference the definition
-const definitionName = 'rnd_node.gh'
+const definitionName = 'voronoiDome.gh'
 
 // listen for slider change events
-const count_slider = document.getElementById( 'count' )
-count_slider.addEventListener( 'input', onSliderChange, false )
-const radius_slider = document.getElementById( 'radius' )
-radius_slider.addEventListener( 'input', onSliderChange, false )
+const size_slider = document.getElementById( 'size' )
+size_slider.addEventListener( 'mouseup', onSliderChange, false )
+const density_slider = document.getElementById( 'density' )
+density_slider.addEventListener( 'mouseup', onSliderChange, false )
 
 const downloadButton = document.getElementById("downloadButton")
 downloadButton.onclick = download
@@ -49,14 +49,14 @@ async function compute() {
     // collect data
 
     // get slider values
-    let count = document.getElementById('count').valueAsNumber
-    let radius = document.getElementById('radius').valueAsNumber
+    let density = document.getElementById('density').valueAsNumber
+    let size = document.getElementById('size').valueAsNumber
 
     // format data
-    let param1 = new RhinoCompute.Grasshopper.DataTree('RH_IN:radius')
-    param1.append([0], [radius])
-    let param2 = new RhinoCompute.Grasshopper.DataTree('RH_IN:count')
-    param2.append([0], [count])
+    let param1 = new RhinoCompute.Grasshopper.DataTree('RH_IN:size')
+    param1.append([0], [size])
+    let param2 = new RhinoCompute.Grasshopper.DataTree('RH_IN:density')
+    param2.append([0], [density])
 
     // Add all params to an array
     let trees = []
@@ -161,6 +161,8 @@ let scene, camera, renderer
 
 function init() {
 
+    THREE.Object3D.DefaultUp = new THREE.Vector3( 0, 0, 1 )
+    
     // create a scene and a camera
     scene = new THREE.Scene()
     scene.background = new THREE.Color(1, 1, 1)
@@ -176,11 +178,12 @@ function init() {
     const controls = new OrbitControls(camera, renderer.domElement)
 
     // add a directional light
-    const directionalLight = new THREE.DirectionalLight( 0xffffff )
-    directionalLight.intensity = 2
+    const directionalLight = new THREE.DirectionalLight( 0xffa6a6 ) //a6edff
+    directionalLight.intensity = 1.5
     scene.add( directionalLight )
 
-    const ambientLight = new THREE.AmbientLight()
+    const ambientLight = new THREE.AmbientLight( 0xa6a6ff )
+    ambientLight.intensity = 2
     scene.add( ambientLight )
 
 }
